@@ -20,8 +20,7 @@ public class Transport {
     @Column(name = "route_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
+    private Integer id;
 
     @Column(name = "bus_number")
     private Integer busNumber;

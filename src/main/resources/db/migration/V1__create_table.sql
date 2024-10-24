@@ -1,5 +1,5 @@
 create table if not exists public_transport_data (
-	route_id INT,
+	route_id SERIAL,
 	bus_number INT,
 	driver_name VARCHAR(50),
 	departure_time VARCHAR(50),

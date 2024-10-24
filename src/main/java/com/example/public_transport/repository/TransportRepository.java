@@ -16,7 +16,7 @@ public interface TransportRepository extends JpaRepository<Transport,Integer>{
     
     @Query("SELECT p FROM Transport p WHERE p.busType=:type")
     Page<Transport> getTransportByType(@Param("type") String type, Pageable pageable);
-
+    
     Optional<Transport>  findByBusNumber(Integer busNumber);
 
 }

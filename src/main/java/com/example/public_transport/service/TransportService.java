@@ -25,28 +25,12 @@ public class TransportService {
     return transportRepository.getTransportByType(type, pageable);
    }
 
-   public void createTransport(
-    Integer busNumber, String driverName, String departureTime, String arrivalTime, BigDecimal ticketPrice,
-    Integer passengerCount, Integer busCapacity, String startLocation, String endLocation, String busCompany,
-    String busType, Integer delayMinutes, Boolean wifiAvaliable, String busColor
-    ){
+   public void createTransport(Transport request){
 
-    Transport transport = new Transport();
-    transport.setBusNumber(busNumber);
-    transport.setDriverName(driverName);
-    transport.setDepartureTime(departureTime);
-    transport.setArrivalTime(arrivalTime);
-    transport.setTicketPrice(ticketPrice);
-    transport.setPassengerCount(passengerCount);
-    transport.setBusCapacity(busCapacity);
-    transport.setStartLocation(startLocation);
-    transport.setEndLocation(endLocation);
-    transport.setBusCompany(busCompany);
-    transport.setBusType(busType);
-    transport.setDelayMinutes(delayMinutes);
-    transport.setWifiAvaliable(wifiAvaliable);
-    transport.setBusColor(busColor);
-    transportRepository.save(transport);
+    if(verification(request)){
+
+        transportRepository.save(request);
+    }
 
    }
 
@@ -54,16 +38,18 @@ public class TransportService {
     transportRepository.deleteById(id);
    }
 
-   public void updateTransportByBusNumber(Integer busNumber, TransportUpdateDto request){
-    Transport transport = transportRepository.findByBusNumber(busNumber).orElseThrow(()  -> new RuntimeException("Transport not found"));
+   public void updateTransportByBusNumber(Integer id, TransportUpdateDto request){
+    Transport transport = transportRepository.findById(id).orElseThrow(()  -> new RuntimeException("Transport not found"));
 
     if( request.getDriverName() == null ||  request.getDriverName().isBlank()){
         throw new  RuntimeException("Driver name is required");
 
     }
+
     if( request.getPassengerCount() == null ||  request.getPassengerCount() < 0|| request.getPassengerCount() > transport.getBusCapacity()){
         throw new  RuntimeException("can't  update passenger count");
     }
+
     if( request.getTicketPrice() == null || request.getTicketPrice().compareTo(BigDecimal.ZERO)==0){
         throw new   RuntimeException("Ticket price is required");
 
@@ -73,11 +59,25 @@ public class TransportService {
     transport.setPassengerCount(request.getPassengerCount());
     transport.setTicketPrice(request.getTicketPrice());
     transportRepository.save(transport);
-  
-    
-    
-    
    }
-   
 
+   public boolean verification(Transport request){
+    
+        if(request.getBusNumber() == null) throw new IllegalArgumentException("a");
+        if(request.getDriverName() == null) throw new IllegalArgumentException("b");
+        if(request.getDepartureTime() == null) throw new IllegalArgumentException("c");
+        if(request.getArrivalTime() == null) throw new IllegalArgumentException("d");
+        if(request.getTicketPrice() == null || request.getTicketPrice().compareTo(BigDecimal.ZERO) == 0) throw new IllegalArgumentException("e");
+        if(request.getPassengerCount() == null || request.getPassengerCount() < 0) throw new IllegalArgumentException("f");
+        if(request.getBusCapacity() == null || request.getBusCapacity() < 0) throw new IllegalArgumentException("g");
+        if(request.getStartLocation() == null) throw new IllegalArgumentException("h");
+        if(request.getEndLocation() == null) throw new IllegalArgumentException("i");
+        if(request.getBusCompany() == null) throw new IllegalArgumentException("j");
+        if(request.getBusType() == null) throw new IllegalArgumentException("k");
+        if(request.getDelayMinutes() == null || request.getDelayMinutes() < 0) throw new IllegalArgumentException("l");
+        if(request.getWifiAvaliable() == null) throw new IllegalArgumentException("m");
+        if(request.getBusColor() == null) throw new IllegalArgumentException("n");
+
+        return true;
+   }
 }
